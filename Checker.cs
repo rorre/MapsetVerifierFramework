@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace MapsetVerifier
 {
-    public class Checker
+    public static class Checker
     {
         /// <summary> Returns a list of issues, which have traceable check origins, in the given beatmap set. </summary>
         public static List<Issue> GetBeatmapSetIssues(BeatmapSet aBeatmapSet)

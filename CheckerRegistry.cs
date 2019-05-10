@@ -7,7 +7,7 @@ using System.Text;
 
 namespace MapsetVerifier
 {
-    public class CheckerRegistry
+    public static class CheckerRegistry
     {
         private static List<Check> checks = new List<Check>();
 
