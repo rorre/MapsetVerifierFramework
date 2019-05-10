@@ -8,8 +8,8 @@ namespace MapsetVerifier.objects
     {
         public Issue.Level Level { get; }
 
-        private string format;
-        private object[] defaultArguments;
+        private readonly string format;
+        private readonly object[] defaultArguments;
 
         private string cause;
 

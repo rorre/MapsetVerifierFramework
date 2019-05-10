@@ -21,9 +21,9 @@ namespace MapsetVerifier.objects
         public IssueTemplate Template { get; set; }
         public List<KeyValuePair<string, int>> InterpretationPairs { get; private set; }
 
-        public string message;
-        public Beatmap beatmap;
-        public Level level;
+        public readonly string message;
+        public readonly Beatmap beatmap;
+        public readonly Level level;
 
         /// <summary> Populated during the checking process. </summary>
         public Check CheckOrigin { get; private set; }
