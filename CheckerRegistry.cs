@@ -33,21 +33,21 @@ namespace MapsetVerifier
         /// These are isolated from the set for optimization purposes. </summary>
         public static IEnumerable<BeatmapCheck> GetBeatmapChecks()
         {
-            return checks.Where(aCheck => aCheck is BeatmapCheck).Select(aCheck => aCheck as BeatmapCheck);
+            return checks.OfType<BeatmapCheck>();
         }
 
         /// <summary> Returns checks which are processed beatmapset-wise when checking for issues.
         /// These are often checks which need to compare between difficulties in a set.</summary>
         public static IEnumerable<BeatmapSetCheck> GetBeatmapSetChecks()
         {
-            return checks.Where(aCheck => aCheck is BeatmapSetCheck).Select(aCheck => aCheck as BeatmapSetCheck);
+            return checks.OfType<BeatmapSetCheck>();
         }
 
         /// <summary> Returns checks which are processed beatmapset-wise when checking for issues and stored in a seperate difficulty.
         /// These are general checks which are independent from any specific difficulty, for example checking files.</summary>
         public static IEnumerable<GeneralCheck> GetGeneralChecks()
         {
-            return checks.Where(aCheck => aCheck is GeneralCheck).Select(aCheck => aCheck as GeneralCheck);
+            return checks.OfType<GeneralCheck>();
         }
     }
 }
