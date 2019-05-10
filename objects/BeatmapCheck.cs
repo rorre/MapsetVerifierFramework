@@ -8,6 +8,6 @@ namespace MapsetVerifier.objects
 {
     public abstract class BeatmapCheck : Check
     {
-        public abstract IEnumerable<Issue> GetIssues(Beatmap beatmap);
+        public abstract IEnumerable<Issue> GetIssues(Beatmap aBeatmap);
     }
 }
