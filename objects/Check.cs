@@ -1,5 +1,4 @@
 ﻿using MapsetVerifier.objects.metadata;
-using System;
 using System.Collections.Generic;
 
 namespace MapsetVerifier.objects
