@@ -18,49 +18,57 @@ namespace MapsetVerifier
         public static List<Issue> GetBeatmapSetIssues(BeatmapSet aBeatmapSet)
         {
             LoadCheckDLLs();
-
+            
             ConcurrentBag<Issue> issueBag = new ConcurrentBag<Issue>();
 
-            Parallel.ForEach(CheckerRegistry.GetGeneralChecks(), aGeneralCheck =>
+            TryGetIssuesParallel(CheckerRegistry.GetGeneralChecks(), aGeneralCheck =>
             {
-                Track checkTrack = new Track("Checking for " + aGeneralCheck.GetMetadata().Message + "...");
-
                 foreach (Issue issue in aGeneralCheck.GetIssues(aBeatmapSet))
                     issueBag.Add(issue.WithOrigin(aGeneralCheck));
-
-                checkTrack.Complete();
             });
 
             Parallel.ForEach(aBeatmapSet.beatmaps, aBeatmap =>
             {
                 Track beatmapTrack = new Track("Checking for issues in " + aBeatmap + "...");
 
-                Parallel.ForEach(CheckerRegistry.GetBeatmapChecks(), aBeatmapCheck =>
+                TryGetIssuesParallel(CheckerRegistry.GetBeatmapChecks(), aBeatmapCheck =>
                 {
-                    Track checkTrack = new Track("Checking for " + aBeatmapCheck.GetMetadata().Message + "...");
-
                     if (((BeatmapCheckMetadata)aBeatmapCheck.GetMetadata()).Modes.Contains(aBeatmap.generalSettings.mode))
                         foreach (Issue issue in aBeatmapCheck.GetIssues(aBeatmap))
                             issueBag.Add(issue.WithOrigin(aBeatmapCheck));
-
-                    checkTrack.Complete();
                 });
 
                 beatmapTrack.Complete();
             });
-            
-            Parallel.ForEach(CheckerRegistry.GetBeatmapSetChecks(), aBeatmapSetCheck =>
-            {
-                Track checkTrack = new Track("Checking for " + aBeatmapSetCheck.GetMetadata().Message + "...");
 
+            TryGetIssuesParallel(CheckerRegistry.GetBeatmapSetChecks(), aBeatmapSetCheck =>
+            {
                 if (aBeatmapSet.beatmaps.Any(aBeatmap => ((BeatmapCheckMetadata)aBeatmapSetCheck.GetMetadata()).Modes.Contains(aBeatmap.generalSettings.mode)))
                     foreach (Issue issue in aBeatmapSetCheck.GetIssues(aBeatmapSet))
                         issueBag.Add(issue.WithOrigin(aBeatmapSetCheck));
-
-                checkTrack.Complete();
             });
 
             return issueBag.ToList();
+        }
+
+        private static void TryGetIssuesParallel<T>(IEnumerable<T> aChecks, Action<T> anAction) where T : Check
+        {
+            Parallel.ForEach(aChecks, aCheck =>
+            {
+                Track checkTrack = new Track("Checking for " + aCheck.GetMetadata().Message + "...");
+
+                try
+                {
+                    anAction(aCheck);
+                }
+                catch (Exception exception)
+                {
+                    exception.Data.Add("Check", aCheck);
+                    throw;
+                }
+
+                checkTrack.Complete();
+            });
         }
 
         public static void LoadCheckDLLs()
