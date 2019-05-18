@@ -9,5 +9,10 @@ namespace MapsetVerifier.objects
 
         public abstract Dictionary<string, IssueTemplate> GetTemplates();
         public abstract CheckMetadata GetMetadata();
+
+        public override string ToString()
+        {
+            return GetMetadata().Message;
+        }
     }
 }
