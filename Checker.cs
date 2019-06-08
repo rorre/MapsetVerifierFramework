@@ -71,11 +71,12 @@ namespace MapsetVerifier
             });
         }
 
-        public static void LoadCheckDLLs()
+        /// <summary> Loads the .dll files from the current directory + relative path ("/checks" by default). </summary>
+        public static void LoadCheckDLLs(string aRelativePath = null)
         {
             CheckerRegistry.ClearChecks();
 
-            Parallel.ForEach(GetCheckDLLPaths(), aDllPath =>
+            Parallel.ForEach(GetCheckDLLPaths(aRelativePath), aDllPath =>
             {
                 Track dllTrack = new Track("Loading checks from \"" + aDllPath.Split('/', '\\').Last() + "\"...");
 
@@ -85,9 +86,9 @@ namespace MapsetVerifier
             });
         }
 
-        private static IEnumerable<string> GetCheckDLLPaths()
+        private static IEnumerable<string> GetCheckDLLPaths(string aRelativePath)
         {
-            string path = Path.Combine(Directory.GetCurrentDirectory() + "\\checks");
+            string path = Path.Combine(Directory.GetCurrentDirectory(), (aRelativePath ?? "checks"));
             return Directory.GetFiles(path).Where(aPath => aPath.EndsWith(".dll"));
         }
 
