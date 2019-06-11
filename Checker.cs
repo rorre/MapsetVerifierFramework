@@ -14,6 +14,8 @@ namespace MapsetVerifier
 {
     public static class Checker
     {
+        public static string RelativeDLLDirectory { get; set; } = null;
+
         /// <summary> Returns a list of issues, which have traceable check origins, in the given beatmap set. </summary>
         public static List<Issue> GetBeatmapSetIssues(BeatmapSet aBeatmapSet)
         {
@@ -72,11 +74,11 @@ namespace MapsetVerifier
         }
 
         /// <summary> Loads the .dll files from the current directory + relative path ("/checks" by default). </summary>
-        public static void LoadCheckDLLs(string aRelativePath = null)
+        public static void LoadCheckDLLs()
         {
             CheckerRegistry.ClearChecks();
 
-            Parallel.ForEach(GetCheckDLLPaths(aRelativePath), aDllPath =>
+            Parallel.ForEach(GetCheckDLLPaths(), aDllPath =>
             {
                 Track dllTrack = new Track("Loading checks from \"" + aDllPath.Split('/', '\\').Last() + "\"...");
 
@@ -86,9 +88,9 @@ namespace MapsetVerifier
             });
         }
 
-        private static IEnumerable<string> GetCheckDLLPaths(string aRelativePath)
+        private static IEnumerable<string> GetCheckDLLPaths()
         {
-            string path = Path.Combine(Directory.GetCurrentDirectory(), (aRelativePath ?? "checks"));
+            string path = Path.Combine(Directory.GetCurrentDirectory(), (RelativeDLLDirectory ?? "checks"));
             return Directory.GetFiles(path).Where(aPath => aPath.EndsWith(".dll"));
         }
 
