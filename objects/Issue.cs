@@ -15,7 +15,7 @@ namespace MapsetVerifier.objects
             Error,
             Minor,
             Warning,
-            Unrankable
+            Problem
         }
 
         public IssueTemplate Template { get; set; }
