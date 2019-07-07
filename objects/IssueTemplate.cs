@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace MapsetVerifier.objects
+namespace MapsetVerifierFramework.objects
 {
     public class IssueTemplate
     {

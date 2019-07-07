@@ -1,7 +1,7 @@
-﻿using MapsetVerifier.objects.metadata;
+﻿using MapsetVerifierFramework.objects.metadata;
 using System.Collections.Generic;
 
-namespace MapsetVerifier.objects
+namespace MapsetVerifierFramework.objects
 {
     public abstract class Check
     {

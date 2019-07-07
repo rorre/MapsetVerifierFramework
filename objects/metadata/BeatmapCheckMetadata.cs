@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace MapsetVerifier.objects.metadata
+namespace MapsetVerifierFramework.objects.metadata
 {
     public class BeatmapCheckMetadata : CheckMetadata
     {

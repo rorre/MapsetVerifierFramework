@@ -1,10 +1,10 @@
 ﻿using MapsetParser.objects;
-using MapsetVerifier.objects.metadata;
+using MapsetVerifierFramework.objects.metadata;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace MapsetVerifier.objects
+namespace MapsetVerifierFramework.objects
 {
     public abstract class BeatmapCheck : Check
     {

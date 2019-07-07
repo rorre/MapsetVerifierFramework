@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 using MapsetParser.objects;
-using MapsetVerifier.objects.metadata;
+using MapsetVerifierFramework.objects.metadata;
 
-namespace MapsetVerifier.objects
+namespace MapsetVerifierFramework.objects
 {
     public abstract class GeneralCheck : Check
     {

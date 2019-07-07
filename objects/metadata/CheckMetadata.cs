@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace MapsetVerifier.objects.metadata
+namespace MapsetVerifierFramework.objects.metadata
 {
     public class CheckMetadata
     {

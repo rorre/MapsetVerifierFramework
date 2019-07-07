@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace MapsetVerifier
+namespace MapsetVerifierFramework
 {
     internal class Track
     {

@@ -1,6 +1,6 @@
 ﻿using MapsetParser.objects;
-using MapsetVerifier.objects;
-using MapsetVerifier.objects.metadata;
+using MapsetVerifierFramework.objects;
+using MapsetVerifierFramework.objects.metadata;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -10,7 +10,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MapsetVerifier
+namespace MapsetVerifierFramework
 {
     public static class Checker
     {

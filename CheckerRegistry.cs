@@ -1,11 +1,11 @@
-﻿using MapsetVerifier.objects;
+﻿using MapsetVerifierFramework.objects;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
 
-namespace MapsetVerifier
+namespace MapsetVerifierFramework
 {
     public static class CheckerRegistry
     {
