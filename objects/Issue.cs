@@ -1,6 +1,8 @@
 ﻿using MapsetParser.objects;
+using MapsetVerifier.objects.metadata;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace MapsetVerifier.objects
@@ -38,6 +40,22 @@ namespace MapsetVerifier.objects
             level = aTemplate.Level;
         }
 
+        /// <summary> Whether this issue applies to the given difficulty level according to the metadata and interpretation. </summary>
+        public bool AppliesToDifficulty(Beatmap.Difficulty aDifficulty)
+        {
+            bool appliesByMetadata =
+                !(CheckOrigin.GetMetadata() is BeatmapCheckMetadata metadata) ||
+                metadata.Difficulties.Contains(aDifficulty);
+
+            bool appliesByInterpretation =
+                !InterpretationPairs.Any() ||
+                InterpretationPairs.Any(aPair =>
+                    aPair.Key == "difficulty" &&
+                    (Beatmap.Difficulty)aPair.Value == aDifficulty);
+
+            return appliesByMetadata && appliesByInterpretation;
+        }
+
         /// <summary> Sets the check origin (i.e. the check instance that created this issue) </summary>
         public Issue WithOrigin(Check aCheck)
         {
@@ -45,8 +63,16 @@ namespace MapsetVerifier.objects
             return this;
         }
 
-        /// <summary> Adds severity parameters, which determine in which context the issue should appear,
-        /// for example only for certain difficulty levels. </summary>
+        /// <summary> Equivalent to using <see cref="WithInterpretation"/> with first argument "difficulty" and rest cast to integers. </summary>
+        public Issue ForDifficulties(params Beatmap.Difficulty[] aDifficulties)
+        {
+            return WithInterpretation("difficulty", aDifficulties.Select(aDiff => (int)aDiff).ToArray());
+        }
+
+        /// <summary> Sets the data of the issue, which can be used by applications to only show the check in certain settings,
+        /// for example only for certain difficulty levels, see <see cref="ForDifficulties"/>.
+        /// <para></para>
+        /// Takes string, int, and int[]. Example: WithInterpretation("difficulty", 0, 1, 2, "other", 2, 3)</summary>
         public Issue WithInterpretation(params object[] aSeverityParams)
         {
             ParseInterpretation(aSeverityParams);
