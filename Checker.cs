@@ -22,7 +22,7 @@ namespace MapsetVerifierFramework
             LoadCheckDLLs();
             
             ConcurrentBag<Issue> issueBag = new ConcurrentBag<Issue>();
-
+            
             TryGetIssuesParallel(CheckerRegistry.GetGeneralChecks(), aGeneralCheck =>
             {
                 foreach (Issue issue in aGeneralCheck.GetIssues(aBeatmapSet))
@@ -91,6 +91,9 @@ namespace MapsetVerifierFramework
         private static IEnumerable<string> GetCheckDLLPaths()
         {
             string path = Path.Combine(Directory.GetCurrentDirectory(), (RelativeDLLDirectory ?? "checks"));
+            if (!Directory.Exists(path))
+                Directory.CreateDirectory(path);
+
             return Directory.GetFiles(path).Where(aPath => aPath.EndsWith(".dll"));
         }
 
