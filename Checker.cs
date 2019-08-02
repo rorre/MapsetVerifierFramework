@@ -87,14 +87,15 @@ namespace MapsetVerifierFramework
                 dllTrack.Complete();
             });
         }
-
+        
         private static IEnumerable<string> GetCheckDLLPaths()
         {
             string path = Path.Combine(Directory.GetCurrentDirectory(), (RelativeDLLDirectory ?? "checks"));
             return Directory.GetFiles(path).Where(aPath => aPath.EndsWith(".dll"));
         }
 
-        private static void LoadCheckDLL(string aCheckPath)
+        /// <summary> Runs the assembly of the given DLL path, which adds checks to the CheckerRegistry. </summary>
+        public static void LoadCheckDLL(string aCheckPath)
         {
             Assembly assembly = Assembly.LoadFile(aCheckPath);
 
