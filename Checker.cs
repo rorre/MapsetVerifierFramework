@@ -19,7 +19,8 @@ namespace MapsetVerifierFramework
         /// <summary> Returns a list of issues, which have traceable check origins, in the given beatmap set. </summary>
         public static List<Issue> GetBeatmapSetIssues(BeatmapSet aBeatmapSet)
         {
-            LoadCheckDLLs();
+            if(!CheckerRegistry.GetChecks().Any())
+                LoadCheckDLLs();
             
             ConcurrentBag<Issue> issueBag = new ConcurrentBag<Issue>();
             
