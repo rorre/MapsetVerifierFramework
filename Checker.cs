@@ -97,10 +97,14 @@ namespace MapsetVerifierFramework
             return Directory.GetFiles(path).Where(aPath => aPath.EndsWith(".dll"));
         }
 
-        /// <summary> Runs the assembly of the given DLL path, which adds checks to the CheckerRegistry. </summary>
+        /// <summary> Runs the assembly of the given DLL path (can be either absolute or relative), which adds checks to the CheckerRegistry. </summary>
         public static void LoadCheckDLL(string aCheckPath)
         {
-            Assembly assembly = Assembly.LoadFile(aCheckPath);
+            string rootedPath = aCheckPath;
+            if (!Path.IsPathRooted(aCheckPath))
+                rootedPath = Path.Combine(Directory.GetCurrentDirectory(), aCheckPath);
+
+            Assembly assembly = Assembly.LoadFile(rootedPath);
 
             Type mainType = assembly.GetExportedTypes().FirstOrDefault(aType => aType.Name == "Main");
             mainType.GetMethod("Run").Invoke(null, null);
