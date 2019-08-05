@@ -93,7 +93,17 @@ namespace MapsetVerifierFramework
         {
             string path = RelativeDLLDirectory ?? "checks";
             if (!Directory.Exists(path))
-                Directory.CreateDirectory(path);
+            {
+                try
+                {
+                    Directory.CreateDirectory(path);
+                }
+                catch (UnauthorizedAccessException)
+                {
+                    // e.g. creating a new directory in Program Files.
+                }
+                return new List<string>();
+            }
 
             return Directory.GetFiles(path).Where(aPath => aPath.EndsWith(".dll"));
         }
