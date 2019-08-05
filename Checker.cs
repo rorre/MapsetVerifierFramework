@@ -91,7 +91,7 @@ namespace MapsetVerifierFramework
         
         private static IEnumerable<string> GetCheckDLLPaths()
         {
-            string path = Path.Combine(Directory.GetCurrentDirectory(), (RelativeDLLDirectory ?? "checks"));
+            string path = RelativeDLLDirectory ?? "checks";
             if (!Directory.Exists(path))
                 Directory.CreateDirectory(path);
 
