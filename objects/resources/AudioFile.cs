@@ -8,6 +8,7 @@ namespace MapsetVerifierFramework.objects.resources
         private readonly string fileName;
         
         private uint? sampleRate;
+        private bool? hasXingHeader;
 
         private double? averageBitrate;
         private double? lowestBitrate;
@@ -48,6 +49,16 @@ namespace MapsetVerifierFramework.objects.resources
             return averageBitrate.GetValueOrDefault();
         }
 
+        /// <summary> Returns whether the audio file contains a Xing header which is skipped over. </summary>
+        public bool HasXingHeader()
+        {
+            if (hasXingHeader != null)
+                return hasXingHeader.GetValueOrDefault();
+
+            LoadBitrates();
+            return hasXingHeader.GetValueOrDefault();
+        }
+
         /// <summary> Reads through all frames of the mp3 and populates the lowest, highest and average bitrate values. </summary>
         private void LoadBitrates()
         {
@@ -58,29 +69,36 @@ namespace MapsetVerifierFramework.objects.resources
             {
                 Mp3Frame frame = Mp3Frame.LoadFromStream(fileStream);
 
-                if (frame != null)
+                // Skip over the Xing header if one exists (would otherwise cause 128 kbps first frame).
+                XingHeader xingHeader = XingHeader.LoadXingHeader(frame);
+                hasXingHeader = xingHeader != null;
+                if (xingHeader != null)
+                    for (int i = 0; i < xingHeader.Frames; ++i)
+                        frame = Mp3Frame.LoadFromStream(fileStream);
+                else
+                    // Even if there isn't a xing header, there's still going to be a header so we'll skip it.
+                    frame = Mp3Frame.LoadFromStream(fileStream);
+
+                while (frame != null)
                 {
+                    if (frame.SampleCount == 0)
+                        continue;
+
                     sampleRate = (uint)frame.SampleRate;
 
-                    lowestBitrate = frame.BitRate;
-                    highestBitrate = frame.BitRate;
+                    if (lowestBitrate == null || frame.BitRate < lowestBitrate)
+                        lowestBitrate = frame.BitRate;
 
-                    while (frame != null)
-                    {
-                        if (frame.BitRate < lowestBitrate)
-                            lowestBitrate = frame.BitRate;
+                    if (highestBitrate == null || frame.BitRate > highestBitrate)
+                        highestBitrate = frame.BitRate;
 
-                        if (frame.BitRate > highestBitrate)
-                            highestBitrate = frame.BitRate;
+                    totalBitrate += frame.BitRate;
 
-                        totalBitrate += frame.BitRate;
-
-                        ++frameCount;
-                        try
-                        { frame = Mp3Frame.LoadFromStream(fileStream); }
-                        catch (EndOfStreamException)
-                        { break; }
-                    }
+                    ++frameCount;
+                    try
+                    { frame = Mp3Frame.LoadFromStream(fileStream); }
+                    catch (EndOfStreamException)
+                    { break; }
                 }
             }
 
